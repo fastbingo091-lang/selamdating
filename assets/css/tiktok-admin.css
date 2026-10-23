@@ -1,0 +1,99 @@
+body {
+    background: #0b0b0f;
+    color: #f5f5f7;
+}
+
+.admin-layout,
+.admin-main {
+    background: #0b0b0f;
+}
+
+.admin-sidebar {
+    border-right: 1px solid #2a2a32;
+    background: #101015;
+}
+
+.admin-sidebar .brand,
+.admin-sidebar .brand:hover {
+    color: #f5f5f7;
+}
+
+.admin-nav a,
+.admin-nav-link {
+    color: #a7a7b0;
+}
+
+.admin-nav a:hover,
+.admin-nav-link:hover,
+.admin-nav a.active {
+    border-color: rgba(254, 44, 85, .28);
+    background: rgba(254, 44, 85, .11);
+    color: #fff;
+}
+
+.admin-nav a.active i {
+    color: #fe2c55;
+}
+
+.admin-nav-link {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.admin-topbar,
+.admin-nav-mobile {
+    border-color: #2a2a32;
+    background: rgba(12, 12, 16, .95);
+}
+
+.admin-content,
+.admin-content .page-heading h1,
+.admin-content .data-panel-header h2,
+.admin-content .metric-value {
+    color: #f5f5f7;
+}
+
+.admin-content .page-heading p,
+.admin-content .muted,
+.admin-content .small-note,
+.admin-sidebar .small-note {
+    color: #a7a7b0 !important;
+}
+
+.admin-content .data-panel,
+.admin-content .metric-card {
+    border: 1px solid #2a2a32;
+    background: #15151b;
+    color: #f5f5f7;
+    box-shadow: 0 14px 38px rgba(0, 0, 0, .28);
+}
+
+.admin-content .data-panel-header {
+    border-color: #2a2a32;
+    background: rgba(255, 255, 255, .025);
+}
+
+.admin-content .form-control,
+.admin-content .form-select {
+    border-color: #35353e;
+    background-color: #101015;
+    color: #f5f5f7;
+}
+
+.admin-nav-mobile a {
+    color: #a7a7b0;
+}
+
+.admin-nav-mobile a.active {
+    color: #fe2c55;
+}
+
+@media (max-width: 767.98px) {
+    .admin-nav-mobile {
+        scrollbar-width: thin;
+    }
+}
