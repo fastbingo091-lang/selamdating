@@ -10,7 +10,7 @@ start_app_session();
  * Continue profile setup for authenticated users before opening the dashboard.
  */
 if (isset($_SESSION['user_id'])) {
-    header('Location: dating/onboarding.php');
+header('Location: products.php');
     exit;
 }
 
@@ -128,7 +128,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     /*
                      * Login successful.
                      */
-                    header('Location: dating/onboarding.php');
+                    header('Location: products.php');
                     exit;
                 }
 
@@ -184,10 +184,10 @@ $rateLimited = login_is_rate_limited();
 
     <meta
         name="theme-color"
-        content="#0b0b0f"
+        content="#090b0a"
     >
 
-    <title>Sign in | Selam Dating App</title>
+    <title>Sign in | Selam Market</title>
 
     <link rel="icon" type="image/svg+xml" href="assets/images/selam-icon.svg">
 
@@ -211,26 +211,26 @@ $rateLimited = login_is_rate_limited();
 
     <!-- Main site CSS -->
     <link
-        href="assets/css/style.css?v=selam-3"
+        href="assets/css/style.css?v=selam-5"
         rel="stylesheet"
     >
     <link
-        href="assets/css/tiktok-app.css?v=selam-1"
+        href="assets/css/tiktok-app.css?v=market-4"
         rel="stylesheet"
     >
 
     <style>
 
         :root {
-            --gb-bg: #fff9f7;
-            --gb-card: #ffffff;
-            --gb-card-light: #fff0f3;
-            --gb-primary: #c45170;
-            --gb-primary-hover: #a83e5f;
-            --gb-blue: #92566f;
-            --gb-text: #352630;
-            --gb-muted: #796c74;
-            --gb-border: #efdee4;
+            --gb-bg: #090b0a;
+            --gb-card: #141715;
+            --gb-card-light: #1c211e;
+            --gb-primary: #20e68a;
+            --gb-primary-hover: #13c977;
+            --gb-blue: #20e68a;
+            --gb-text: #f5f7f6;
+            --gb-muted: #aab3ae;
+            --gb-border: #292f2b;
             --gb-danger: #EF4444;
         }
 
@@ -342,22 +342,22 @@ $rateLimited = login_is_rate_limited();
             min-height: 52px;
             padding: 12px 14px;
             color: var(--gb-text);
-            background: #fff;
+            background: #0d100e;
             border: 1px solid var(--gb-border);
             border-radius: 12px;
             font-size: 15px;
         }
 
         .login-card .form-control::placeholder {
-            color: #64748B;
+            color: #89938d;
         }
 
         .login-card .form-control:focus {
             color: var(--gb-text);
-            background: #fff;
+            background: #0d100e;
             border-color: var(--gb-primary);
             box-shadow:
-                0 0 0 3px rgba(196, 81, 112, 0.14);
+                0 0 0 3px rgba(32, 230, 138, 0.16);
         }
 
         /*
@@ -393,7 +393,7 @@ $rateLimited = login_is_rate_limited();
         .password-toggle:hover,
         .password-toggle:focus {
             color: var(--gb-text);
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.07);
         }
 
         /*
@@ -404,7 +404,7 @@ $rateLimited = login_is_rate_limited();
             border: 0;
             border-radius: 12px;
             background: var(--gb-primary);
-            color: #fff;
+            color: #07120c;
             font-size: 15px;
             font-weight: 700;
             transition:
@@ -414,7 +414,7 @@ $rateLimited = login_is_rate_limited();
 
         .login-button:hover {
             background: var(--gb-primary-hover);
-            color: #fff;
+            color: #07120c;
         }
 
         .login-button:active {
@@ -452,7 +452,7 @@ $rateLimited = login_is_rate_limited();
         }
 
         .register-text a:hover {
-            color: #4ADE80;
+            color: var(--gb-primary);
             text-decoration: underline;
         }
 
@@ -462,7 +462,7 @@ $rateLimited = login_is_rate_limited();
         .login-footer {
             margin-top: 24px;
             text-align: center;
-            color: #64748B;
+            color: var(--gb-muted);
             font-size: 12px;
         }
 
@@ -560,7 +560,7 @@ $rateLimited = login_is_rate_limited();
                     class="alert alert-success login-alert"
                     role="status"
                 >
-                    Your account has been created. You can now sign in.
+                    Welcome to Selam Market! Your account has been created. You can now sign in. Your welcome message will also remain in your notifications inbox.
                 </div>
 
             <?php endif; ?>
@@ -739,7 +739,7 @@ $rateLimited = login_is_rate_limited();
         <!-- Small footer -->
 
         <div class="login-footer">
-            © <?= date('Y') ?> Selam Dating App
+            © <?= date('Y') ?> Selam Market
         </div>
 
     </div>
@@ -813,7 +813,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="assets/js/app.js"></script>
+<script src="assets/js/app.js?v=feedback-2"></script>
 
 </body>
 </html>

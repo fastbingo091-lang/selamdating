@@ -48,6 +48,27 @@ $totalTransactions = (int) $db
     ->query("SELECT COUNT(*) FROM transactions")
     ->fetchColumn();
 
+$marketplaceStats = null;
+$marketplaceStatsError = '';
+
+try {
+    $marketplaceStats = $db->query("
+        SELECT
+            (SELECT COUNT(*) FROM products) AS total_products,
+            (SELECT COUNT(*) FROM products WHERE status = 'active' AND published = 1) AS live_products,
+            (SELECT COALESCE(SUM(quantity), 0) FROM marketplace_purchases) AS units_sold,
+            (SELECT COALESCE(SUM(price * quantity), 0) FROM marketplace_purchases) AS sales_volume,
+            (SELECT COUNT(*) FROM product_claims WHERE claimed_at >= CURDATE()) AS claims_today,
+            (SELECT COALESCE(SUM(amount), 0) FROM product_claims WHERE claimed_at >= CURDATE()) AS profit_paid_today,
+            (SELECT COALESCE(SUM(amount), 0) FROM product_claims) AS total_profit_paid,
+            (SELECT COALESCE(SUM(amount), 0) FROM product_commissions WHERE created_at >= CURDATE()) AS commissions_today,
+            (SELECT COALESCE(SUM(amount), 0) FROM product_commissions) AS total_commissions
+    ")->fetch(PDO::FETCH_ASSOC);
+} catch (Throwable $e) {
+    error_log('Admin dashboard marketplace query failed: ' . $e->getMessage());
+    $marketplaceStatsError = 'Marketplace reporting is unavailable. Apply the product marketplace migration and try again.';
+}
+
 /*
 |--------------------------------------------------------------------------
 | Recent transactions
@@ -176,6 +197,52 @@ require __DIR__ . '/../includes/admin_header.php';
     </article>
 
 </section>
+
+<?php if ($marketplaceStatsError !== ''): ?>
+    <div class="alert alert-warning" role="alert">
+        <?= html_escape($marketplaceStatsError) ?>
+    </div>
+<?php elseif (is_array($marketplaceStats)): ?>
+    <section class="data-panel mb-4">
+        <div class="data-panel-header">
+            <div>
+                <h2>Marketplace overview</h2>
+                <p class="muted mb-0">Catalog, sales, and user-claimed product profit.</p>
+            </div>
+            <div class="d-flex gap-3">
+                <a href="products.php">Manage products <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                <a href="profit-claims.php">View claims <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+            </div>
+        </div>
+        <div class="metric-grid p-3">
+            <article class="metric-card">
+                <div class="metric-top"><span>Live products</span><span class="metric-icon"><i class="bi bi-bag-check" aria-hidden="true"></i></span></div>
+                <div class="metric-value"><?= number_format((int) $marketplaceStats['live_products']) ?></div>
+                <div class="metric-foot"><?= number_format((int) $marketplaceStats['total_products']) ?> catalog products total</div>
+            </article>
+            <article class="metric-card">
+                <div class="metric-top"><span>Units sold</span><span class="metric-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span></div>
+                <div class="metric-value"><?= number_format((int) $marketplaceStats['units_sold']) ?></div>
+                <div class="metric-foot"><?= number_format((float) $marketplaceStats['sales_volume'], 2) ?> ETB recorded sales</div>
+            </article>
+            <article class="metric-card">
+                <div class="metric-top"><span>Profit claims today</span><span class="metric-icon"><i class="bi bi-calendar-check" aria-hidden="true"></i></span></div>
+                <div class="metric-value"><?= number_format((int) $marketplaceStats['claims_today']) ?></div>
+                <div class="metric-foot"><?= number_format((float) $marketplaceStats['profit_paid_today'], 2) ?> ETB credited to wallets</div>
+            </article>
+            <article class="metric-card">
+                <div class="metric-top"><span>Profit claimed to date</span><span class="metric-icon"><i class="bi bi-cash-stack" aria-hidden="true"></i></span></div>
+                <div class="metric-value"><?= number_format((float) $marketplaceStats['total_profit_paid'], 2) ?></div>
+                <div class="metric-foot">ETB recorded in product claim ledger</div>
+            </article>
+            <article class="metric-card">
+                <div class="metric-top"><span>Team commissions</span><span class="metric-icon"><i class="bi bi-diagram-3" aria-hidden="true"></i></span></div>
+                <div class="metric-value"><?= number_format((float) $marketplaceStats['total_commissions'], 2) ?></div>
+                <div class="metric-foot"><?= number_format((float) $marketplaceStats['commissions_today'], 2) ?> ETB credited today</div>
+            </article>
+        </div>
+    </section>
+<?php endif; ?>
 
 <section class="data-panel mb-4">
     <div class="data-panel-header">

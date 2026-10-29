@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: selam-market
+    runtime: docker
+    plan: 0.5c-512mb
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz.php
+    disk:
+      name: product-images
+      mountPath: /var/www/html/assets/uploads
+      sizeGB: 1
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASS
+        sync: false

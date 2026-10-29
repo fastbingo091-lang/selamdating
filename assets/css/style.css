@@ -1,7 +1,7 @@
 /* =========================================================
    SELAM
    Main Application Styles
-   Warm, responsive dating-app UI
+   Warm, responsive marketplace UI
    ========================================================= */
 
 
@@ -1877,13 +1877,137 @@ textarea:focus-visible {
         spin .7s linear infinite;
 }
 
+.loading-button-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-input-spinner {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.app-navigation-spinner {
+    position: fixed;
+    z-index: 3000;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(5, 7, 6, .48);
+    color: #f3f5f4;
+    backdrop-filter: blur(2px);
+}
+
+.app-navigation-spinner.is-visible {
+    display: flex;
+}
+
+.app-navigation-spinner .loading-spinner {
+    width: 42px;
+    height: 42px;
+    border-width: 4px;
+    filter: drop-shadow(0 3px 12px rgba(0, 0, 0, .45));
+}
+
+.global-toast-region {
+    position: fixed;
+    z-index: 3100;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px;
+    pointer-events: none;
+}
+
+.global-toast {
+    display: grid;
+    width: min(420px, 100%);
+    grid-template-columns: 30px minmax(0, 1fr) 28px;
+    align-items: center;
+    gap: 10px;
+    min-height: 54px;
+    padding: 9px 10px;
+    border: 1px solid rgba(255, 255, 255, .09);
+    border-radius: 9px;
+    background: #292d2b;
+    color: #f3f5f4;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, .32);
+    font-size: 13px;
+    line-height: 1.4;
+    animation: global-toast-enter .18s ease-out both;
+    pointer-events: auto;
+}
+
+.global-toast-icon {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    background: #3a3f3d;
+    color: #8fe2b5;
+}
+
+.global-toast.is-error .global-toast-icon {
+    color: #ff9a9a;
+}
+
+.global-toast-message {
+    overflow-wrap: anywhere;
+}
+
+.global-toast-close {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #c4cbc7;
+    font-size: 18px;
+}
+
+.global-toast-close:hover,
+.global-toast-close:focus-visible {
+    background: #3a3f3d;
+    color: #fff;
+}
+
+@keyframes global-toast-enter {
+    from { opacity: 0; transform: translateY(8px) scale(.98); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .is-loading {
     pointer-events: none;
+}
+
+.is-loading .loading-button-label {
+    opacity: .8;
 }
 
 .page-enter {
     animation:
         page-enter .22s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .global-toast {
+        animation-duration: .01ms;
+    }
+
+    .loading-spinner {
+        animation-duration: 1.5s;
+    }
 }
 
 
@@ -1935,8 +2059,7 @@ textarea:focus-visible {
 .bottom-nav-item {
     position: relative;
 
-    width: auto;
-    flex: 1 1 0;
+    width: 25%;
     height: 58px;
 
     display: flex;
@@ -2431,7 +2554,7 @@ textarea:focus-visible {
     }
 
     .table thead th {
-        font-size: 9px;
+        font-size: 10px;
     }
 
     .table-empty {
@@ -2597,7 +2720,8 @@ textarea:focus-visible {
     }
 
     .bottom-nav-item {
-        width: 25%;
+        width: auto;
+        flex: 1 1 0;
 
         height: 58px;
 
@@ -2605,7 +2729,7 @@ textarea:focus-visible {
 
         border-radius: 15px;
 
-        font-size: 10px;
+        font-size: 9px;
     }
 
     .bottom-nav-item i {
@@ -3158,7 +3282,7 @@ textarea:focus-visible {
     }
 }
 
-/* Selam dating-app visual theme */
+/* Selam marketplace visual theme */
 body {
     background:
         radial-gradient(ellipse at 50% -18%, rgba(249, 222, 228, .48), transparent 55%),

@@ -145,7 +145,7 @@ function telegram_process_message(array $message): void
         if ($command === 'start' || $command === 'help') {
             telegram_send_text(
                 $chatId,
-                "Welcome to Selam Dating App. Use the Selam app to manage your ETB wallet and dating profile.\n\n"
+                "Welcome to Selam Market. Use the app to manage your ETB wallet and product portfolio.\n\n"
                 . "Commands:\n/balance - view your wallet balance\n/profile - view your linked account\n/help - show this message\n\n"
                 . "Send a message here to contact support."
             );

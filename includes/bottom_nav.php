@@ -27,7 +27,7 @@ $authenticated = isset(
             require __DIR__ . '/brand.php';
             ?>
 
-            <p>Selam Dating App · A little closer, every day.</p>
+            <p>Selam Market · Buy once and earn daily profit.</p>
         </div>
 
         <!-- FOOTER LINKS -->
@@ -41,22 +41,22 @@ $authenticated = isset(
 
                     <?php if ($authenticated): ?>
 
-                        <a href="<?= html_escape($appRoot . 'dating/discover.php') ?>"
-                           <?= $activeNav === 'discover' ? 'aria-current="page"' : '' ?>>
-                            <i class="bi bi-heart" aria-hidden="true"></i>
-                            Discover
+                        <a href="<?= html_escape($appRoot . 'products.php') ?>"
+                           <?= $activeNav === 'products' ? 'aria-current="page"' : '' ?>>
+                            <i class="bi bi-bag" aria-hidden="true"></i>
+                            Products
+                        </a>
+
+                        <a href="<?= html_escape($appRoot . 'my-products.php') ?>"
+                           <?= $activeNav === 'my-products' ? 'aria-current="page"' : '' ?>>
+                            <i class="bi bi-box-seam" aria-hidden="true"></i>
+                            My Products
                         </a>
 
                         <a href="<?= html_escape($appRoot . 'wallet/index.php') ?>"
                            <?= $activeNav === 'wallet' ? 'aria-current="page"' : '' ?>>
                             <i class="bi bi-wallet2" aria-hidden="true"></i>
                             Wallet
-                        </a>
-
-                        <a href="<?= html_escape($appRoot . 'dating/chats.php') ?>"
-                           <?= $activeNav === 'chats' ? 'aria-current="page"' : '' ?>>
-                            <i class="bi bi-chat-dots" aria-hidden="true"></i>
-                            Chats
                         </a>
 
                         <a href="<?= html_escape($appRoot . 'wallet/transactions.php') ?>"
@@ -71,12 +71,24 @@ $authenticated = isset(
                             Transfer
                         </a>
 
+                        <a href="<?= html_escape($appRoot . 'notifications.php') ?>"
+                           <?= $activeNav === 'notifications' ? 'aria-current="page"' : '' ?>>
+                            <i class="bi bi-bell" aria-hidden="true"></i>
+                            Notifications
+                        </a>
+
+                        <a href="<?= html_escape($appRoot . 'support.php') ?>"
+                           <?= $activeNav === 'support' ? 'aria-current="page"' : '' ?>>
+                            <i class="bi bi-life-preserver" aria-hidden="true"></i>
+                            Support
+                        </a>
+
                     <?php else: ?>
 
-                        <a href="<?= html_escape($appRoot . './') ?>"
+                        <a href="<?= html_escape($appRoot . 'products.php') ?>"
                            <?= $activeNav === 'home' ? 'aria-current="page"' : '' ?>>
-                            <i class="bi bi-heart" aria-hidden="true"></i>
-                            Discover
+                            <i class="bi bi-bag" aria-hidden="true"></i>
+                            Shop
                         </a>
 
                         <a href="<?= html_escape($appRoot . 'login.php') ?>"
@@ -103,10 +115,10 @@ $authenticated = isset(
 
                     <nav class="footer-nav" aria-label="Account navigation">
 
-                        <a href="<?= html_escape($appRoot . 'profile.php') ?>"
-                           <?= $activeNav === 'profile' ? 'aria-current="page"' : '' ?>>
-                            <i class="bi bi-person" aria-hidden="true"></i>
-                            Profile
+                        <a href="<?= html_escape($appRoot . 'team.php') ?>"
+                           <?= $activeNav === 'team' ? 'aria-current="page"' : '' ?>>
+                            <i class="bi bi-people" aria-hidden="true"></i>
+                            My Team
                         </a>
 
                         <form method="post"
@@ -133,8 +145,8 @@ $authenticated = isset(
 
     <!-- FOOTER META -->
     <div class="site-footer-meta">
-        <span>© <?= date('Y') ?> Selam Dating App</span>
-        <span>Connection starts with hello.</span>
+        <span>© <?= date('Y') ?> Selam Market</span>
+        <span>Buy once. Earn daily.</span>
     </div>
 </footer>
 
@@ -143,16 +155,16 @@ $authenticated = isset(
 
     <?php if ($authenticated): ?>
 
-        <a class="bottom-nav-item<?= $activeNav === 'discover' ? ' active' : '' ?>"
-           href="<?= html_escape($appRoot . 'dating/discover.php') ?>">
-            <i class="bi bi-heart" aria-hidden="true"></i>
-            <span>Discover</span>
+        <a class="bottom-nav-item<?= $activeNav === 'products' ? ' active' : '' ?>"
+           href="<?= html_escape($appRoot . 'products.php') ?>">
+            <i class="bi bi-bag" aria-hidden="true"></i>
+            <span>Products</span>
         </a>
 
-        <a class="bottom-nav-item<?= $activeNav === 'chats' ? ' active' : '' ?>"
-           href="<?= html_escape($appRoot . 'dating/chats.php') ?>">
-            <i class="bi bi-chat-dots" aria-hidden="true"></i>
-            <span>Chats</span>
+        <a class="bottom-nav-item<?= $activeNav === 'my-products' ? ' active' : '' ?>"
+           href="<?= html_escape($appRoot . 'my-products.php') ?>">
+            <i class="bi bi-box-seam" aria-hidden="true"></i>
+            <span>My Products</span>
         </a>
 
         <a class="bottom-nav-item<?= $activeNav === 'wallet' ? ' active' : '' ?>"
@@ -161,18 +173,24 @@ $authenticated = isset(
             <span>Wallet</span>
         </a>
 
-        <a class="bottom-nav-item<?= $activeNav === 'profile' ? ' active' : '' ?>"
-           href="<?= html_escape($appRoot . 'profile.php') ?>">
-            <i class="bi bi-person" aria-hidden="true"></i>
-            <span>Profile</span>
+        <a class="bottom-nav-item<?= $activeNav === 'team' ? ' active' : '' ?>"
+           href="<?= html_escape($appRoot . 'team.php') ?>">
+            <i class="bi bi-people" aria-hidden="true"></i>
+            <span>Team</span>
+        </a>
+
+        <a class="bottom-nav-item<?= $activeNav === 'support' ? ' active' : '' ?>"
+           href="<?= html_escape($appRoot . 'support.php') ?>">
+            <i class="bi bi-life-preserver" aria-hidden="true"></i>
+            <span>Support</span>
         </a>
 
     <?php else: ?>
 
         <a class="bottom-nav-item<?= $activeNav === 'home' ? ' active' : '' ?>"
-           href="<?= html_escape($appRoot . './') ?>">
-            <i class="bi bi-heart" aria-hidden="true"></i>
-            <span>Discover</span>
+           href="<?= html_escape($appRoot . 'products.php') ?>">
+            <i class="bi bi-bag" aria-hidden="true"></i>
+            <span>Shop</span>
         </a>
 
         <a class="bottom-nav-item<?= $activeNav === 'login' ? ' active' : '' ?>"

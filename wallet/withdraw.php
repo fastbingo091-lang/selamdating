@@ -197,7 +197,7 @@ require __DIR__ . '/../includes/app_header.php';
         <div class="p-4 muted">You do not have any withdrawal requests yet.</div>
     <?php else: ?>
         <div class="table-responsive"><table class="table align-middle mb-0">
-            <thead><tr><th>Request</th><th>Amount</th><th>Method</th><th>Destination</th><th>Status</th><th>Date</th></tr></thead>
+            <thead><tr><th>Request</th><th>Amount</th><th>Method</th><th>Destination</th><th>Status</th><th>Date</th><th>Details</th></tr></thead>
             <tbody><?php foreach ($requests as $request): ?>
                 <tr>
                     <td>#<?= (int) $request['id'] ?></td>
@@ -206,9 +206,11 @@ require __DIR__ . '/../includes/app_header.php';
                     <td><?= html_escape((string) $request['destination_name']) ?> · <?= html_escape((string) $request['destination_account']) ?></td>
                     <td><?= html_escape(ucfirst((string) $request['status'])) ?><?php if (!empty($request['rejection_reason'])): ?><br><small><?= html_escape((string) $request['rejection_reason']) ?></small><?php endif; ?></td>
                     <td><?= html_escape((string) $request['created_at']) ?></td>
+                    <td><button class="btn btn-sm btn-outline-light" type="button" data-wallet-request-kind="withdrawal" data-wallet-request-id="<?= (int) $request['id'] ?>">See details</button></td>
                 </tr>
             <?php endforeach; ?></tbody>
         </table></div>
     <?php endif; ?>
 </section>
+<?php require __DIR__ . '/../includes/wallet_request_details_panel.php'; ?>
 <?php require __DIR__ . '/../includes/app_footer.php'; ?>

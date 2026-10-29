@@ -21,8 +21,8 @@ try {
 }
 
 $appRoot = '../';
-$pageTitle = 'Meet Selam';
-$pageDescription = 'A warmer place to begin a new connection.';
+$pageTitle = 'Selam Market';
+$pageDescription = 'Shop products, manage your wallet, and earn product profit.';
 $activeNav = 'home';
 $authenticated = isset($_SESSION['user_id']);
 
@@ -31,28 +31,28 @@ require __DIR__ . '/../includes/app_header.php';
 
 <section class="selam-hero">
     <div class="selam-hero-copy">
-        <span class="selam-kicker"><i class="bi bi-heart-fill" aria-hidden="true"></i> YOUR NEXT CHAPTER STARTS HERE</span>
-        <h2>Make room for a little more <span>connection.</span></h2>
-        <p>Selam means hello. Let it be the beginning of something meaningful.</p>
+        <span class="selam-kicker"><i class="bi bi-bag-fill" aria-hidden="true"></i> SHOP SELAM MARKET</span>
+        <h2>Find products for <span>every day.</span></h2>
+        <p>Browse products posted by our team, buy with your ETB wallet, and track your purchases in one place.</p>
         <div class="selam-hero-actions">
             <?php if ($authenticated): ?>
-                <a class="selam-primary-link" href="../dashboard/index.php">Go to your space <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-                <a class="selam-secondary-link" href="../profile.php">View your profile</a>
+                <a class="selam-primary-link" href="../products.php">Browse products <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                <a class="selam-secondary-link" href="../my-products.php">My products</a>
             <?php else: ?>
-                <a class="selam-primary-link" href="../register.php">Join Selam <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-                <a class="selam-secondary-link" href="../login.php">I already have an account</a>
+                <a class="selam-primary-link" href="../register.php">Create account <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                <a class="selam-secondary-link" href="../login.php">Sign in</a>
             <?php endif; ?>
         </div>
         <div class="selam-hero-note">
-            <i class="bi bi-stars" aria-hidden="true"></i>
-            A thoughtful, welcoming place to start.
+            <i class="bi bi-wallet2" aria-hidden="true"></i>
+            Secure wallet checkout and clear product details.
         </div>
     </div>
     <div class="selam-hero-art" aria-hidden="true">
         <div class="selam-sun"></div>
-        <div class="selam-heart-orbit orbit-one"><i class="bi bi-heart-fill"></i></div>
-        <div class="selam-heart-orbit orbit-two"><i class="bi bi-heart-fill"></i></div>
-        <div class="selam-heart-main"><i class="bi bi-heart-fill"></i></div>
+        <div class="selam-heart-orbit orbit-one"><i class="bi bi-box-seam"></i></div>
+        <div class="selam-heart-orbit orbit-two"><i class="bi bi-bag-check"></i></div>
+        <div class="selam-heart-main"><i class="bi bi-bag-fill"></i></div>
         <span class="selam-spark spark-one">✦</span>
         <span class="selam-spark spark-two">✧</span>
         <span class="selam-spark spark-three">✦</span>
@@ -60,11 +60,11 @@ require __DIR__ . '/../includes/app_header.php';
 </section>
 
 <section class="selam-welcome-panel">
-    <div class="selam-section-icon"><i class="bi bi-chat-heart" aria-hidden="true"></i></div>
+    <div class="selam-section-icon"><i class="bi bi-bag-check" aria-hidden="true"></i></div>
     <div>
-        <span class="eyebrow">A NOTE FROM SELAM</span>
-        <h2>Good connections begin with being yourself.</h2>
-        <p>Find mutual matches, share a little love with likes and comments, and start a private chat.</p>
+        <span class="eyebrow">SHOP WITH SELAM</span>
+        <h2>Products, purchases, and profits in one place.</h2>
+        <p>Browse current products, see what you own, and check eligible daily profit from your account.</p>
     </div>
     <span class="status-badge warning">Early access</span>
 </section>
@@ -72,44 +72,44 @@ require __DIR__ . '/../includes/app_header.php';
 <section class="selam-steps" aria-labelledby="selam-steps-title">
     <div class="selam-section-heading">
         <div>
-            <span class="eyebrow">A SIMPLE BEGINNING</span>
-            <h2 id="selam-steps-title">Your Selam, your way</h2>
+            <span class="eyebrow">HOW IT WORKS</span>
+            <h2 id="selam-steps-title">Start shopping</h2>
         </div>
-        <span class="selam-heading-aside">Start at your own pace</span>
+        <span class="selam-heading-aside">Simple steps</span>
     </div>
     <div class="selam-step-grid">
-        <a class="selam-step-card" href="<?= $authenticated ? '../profile.php' : '../register.php' ?>">
+        <a class="selam-step-card" href="<?= $authenticated ? '../products.php' : '../register.php' ?>">
             <span class="selam-step-number">01</span>
-            <span class="selam-step-icon"><i class="bi bi-person-heart" aria-hidden="true"></i></span>
-            <h3>Start with you</h3>
-            <p>Set up your Selam account and visit your profile.</p>
-            <span class="selam-step-link"><?= $authenticated ? 'View profile' : 'Create account' ?> <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+            <span class="selam-step-icon"><i class="bi bi-bag" aria-hidden="true"></i></span>
+            <h3>Choose a product</h3>
+            <p>See product pricing, stock, and daily-profit duration.</p>
+            <span class="selam-step-link"><?= $authenticated ? 'Browse products' : 'Create account' ?> <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
-        <a class="selam-step-card" href="<?= $authenticated ? '../dashboard/index.php' : '../login.php' ?>">
+        <a class="selam-step-card" href="<?= $authenticated ? '../my-products.php' : '../login.php' ?>">
             <span class="selam-step-number">02</span>
-            <span class="selam-step-icon"><i class="bi bi-sparkles" aria-hidden="true"></i></span>
-            <h3>Make yourself at home</h3>
-            <p>Come back to your personal space whenever you like.</p>
-            <span class="selam-step-link"><?= $authenticated ? 'Open dashboard' : 'Sign in' ?> <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
+            <span class="selam-step-icon"><i class="bi bi-box-seam" aria-hidden="true"></i></span>
+            <h3>Track your purchases</h3>
+            <p>Purchased items appear in My Products.</p>
+            <span class="selam-step-link"><?= $authenticated ? 'My products' : 'Sign in' ?> <i class="bi bi-arrow-right" aria-hidden="true"></i></span>
         </a>
         <div class="selam-step-card selam-coming-card">
             <span class="selam-step-number">03</span>
-            <span class="selam-step-icon"><i class="bi bi-chat-dots" aria-hidden="true"></i></span>
-            <h3>More ways to connect</h3>
-            <p>Meet profiles whose interests match yours, and start a private chat.</p>
-            <span class="selam-coming-label"><i class="bi bi-heart-fill" aria-hidden="true"></i> Discover on Selam</span>
+            <span class="selam-step-icon"><i class="bi bi-cash-stack" aria-hidden="true"></i></span>
+            <h3>Claim eligible profit</h3>
+            <p>Check your product terms and claim once each eligible day.</p>
+            <span class="selam-coming-label"><i class="bi bi-check2-circle" aria-hidden="true"></i> In-app wallet credit</span>
         </div>
     </div>
 </section>
 
 <section class="selam-utility-panel">
     <div>
-        <span class="eyebrow">YOUR SELAM ACCOUNT</span>
-        <h2>Everything in one place</h2>
-        <p>Manage your account and explore the tools currently available.</p>
+        <span class="eyebrow">YOUR MARKET ACCOUNT</span>
+        <h2>Manage your account</h2>
+        <p>Access your products, wallet, and referral team.</p>
     </div>
     <div class="selam-utility-links">
-        <a href="../profile.php"><i class="bi bi-person-circle" aria-hidden="true"></i> Profile <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+        <a href="../team.php"><i class="bi bi-people" aria-hidden="true"></i> My Team <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
         <a href="../wallet/index.php"><i class="bi bi-wallet2" aria-hidden="true"></i> Wallet <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
     </div>
 </section>

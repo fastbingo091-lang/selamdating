@@ -8,13 +8,19 @@ require_once __DIR__ . '/includes/telegram.php';
 start_app_session();
 
 if (isset($_SESSION['user_id'])) {
-    header('Location: dating/onboarding.php');
+    header('Location: products.php');
     exit;
 }
 
 $error = '';
 $username = '';
 $phoneInputValue = '';
+$referralCodeInput = $_SERVER['REQUEST_METHOD'] === 'POST'
+    ? ($_POST['referral_code'] ?? '')
+    : ($_GET['ref'] ?? '');
+$referralCode = is_string($referralCodeInput)
+    ? strtoupper(trim($referralCodeInput))
+    : '';
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
@@ -23,6 +29,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $phoneInput = $_POST['phone'] ?? '';
     $passwordInput = $_POST['password'] ?? '';
     $confirmInput = $_POST['password_confirm'] ?? '';
+    $referralCodeInput = $_POST['referral_code'] ?? '';
     $telegramInitDataInput = $_POST['telegram_init_data'] ?? '';
 
     $username = is_string($usernameInput)
@@ -41,6 +48,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
     $passwordConfirm = is_string($confirmInput)
         ? $confirmInput
+        : '';
+    $referralCode = is_string($referralCodeInput)
+        ? strtoupper(trim($referralCodeInput))
         : '';
 
     $telegramInitData = is_string($telegramInitDataInput)
@@ -144,15 +154,27 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $connection = database();
 
             $connection->beginTransaction();
+            $referrerId = null;
+            if ($referralCode !== '') {
+                $referrerQuery = $connection->prepare(
+                    'SELECT id FROM users WHERE referral_code = ? AND status = "active" LIMIT 1'
+                );
+                $referrerQuery->execute([$referralCode]);
+                $referrerId = $referrerQuery->fetchColumn();
+                if ($referrerId === false) {
+                    throw new RuntimeException('That referral code is not valid.');
+                }
+            }
 
             /*
              * Create user.
              */
+            $newReferralCode = 'SELAM' . strtoupper(bin2hex(random_bytes(6)));
             $userInsert = $connection->prepare(
                 'INSERT INTO users
-                (username, phone, email, password_hash, telegram_user_id, telegram_username)
+                (username, phone, email, password_hash, telegram_user_id, telegram_username, referral_code, referred_by_user_id)
                 VALUES
-                (:username, :phone, NULL, :password_hash, :telegram_user_id, :telegram_username)'
+                (:username, :phone, NULL, :password_hash, :telegram_user_id, :telegram_username, :referral_code, :referred_by_user_id)'
             );
 
             $userInsert->execute([
@@ -166,7 +188,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                     $telegramUser['id'] ?? null,
                 'telegram_username' =>
                     $telegramUser['username'] ?? null,
+                'referral_code' => $newReferralCode,
+                'referred_by_user_id' => $referrerId,
             ]);
+            $newUserId = (int) $connection->lastInsertId();
 
             /*
              * Create wallet.
@@ -181,14 +206,30 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             );
 
             $walletInsert->execute([
-                'user_id' => $connection->lastInsertId(),
+                'user_id' => $newUserId,
                 'currency' => 'ETB',
+            ]);
+
+            $welcomeInsert = $connection->prepare("
+                INSERT INTO user_notifications (recipient_user_id, title, message)
+                VALUES (?, 'Welcome to Selam Market', ?)
+            ");
+            $welcomeInsert->execute([
+                $newUserId,
+                'Welcome to Selam Market! Your account is ready. Browse products, track your purchases in My Products, and claim eligible daily profit. Keep this welcome message in your inbox as a guide to getting started.',
             ]);
 
             $connection->commit();
 
             header('Location: login.php?registered=1');
             exit;
+
+        } catch (RuntimeException $exception) {
+
+            if ($connection instanceof PDO && $connection->inTransaction()) {
+                $connection->rollBack();
+            }
+            $error = $exception->getMessage();
 
         } catch (PDOException $exception) {
 
@@ -236,10 +277,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
     <meta
         name="theme-color"
-        content="#0b0b0f"
+        content="#090b0a"
     >
 
-    <title>Join Selam | Selam Dating App</title>
+    <title>Join Selam | Selam Market</title>
 
     <link rel="icon" type="image/svg+xml" href="assets/images/selam-icon.svg">
 
@@ -263,24 +304,24 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
     <!-- Main CSS -->
     <link
-        href="assets/css/style.css?v=selam-3"
+        href="assets/css/style.css?v=selam-5"
         rel="stylesheet"
     >
     <link
-        href="assets/css/tiktok-app.css?v=selam-1"
+        href="assets/css/tiktok-app.css?v=market-4"
         rel="stylesheet"
     >
 
     <style>
 
         :root {
-            --gb-bg: #fff9f7;
-            --gb-card: #ffffff;
-            --gb-primary: #c45170;
-            --gb-primary-hover: #a83e5f;
-            --gb-text: #352630;
-            --gb-muted: #796c74;
-            --gb-border: #efdee4;
+            --gb-bg: #090b0a;
+            --gb-card: #141715;
+            --gb-primary: #20e68a;
+            --gb-primary-hover: #13c977;
+            --gb-text: #f5f7f6;
+            --gb-muted: #aab3ae;
+            --gb-border: #292f2b;
             --gb-danger: #EF4444;
         }
 
@@ -408,7 +449,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             padding: 12px 14px;
 
             color: var(--gb-text);
-            background: #fff;
+            background: #0d100e;
 
             border: 1px solid var(--gb-border);
             border-radius: 12px;
@@ -417,17 +458,17 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         }
 
         .register-card .form-control::placeholder {
-            color: #64748B;
+            color: #89938d;
         }
 
         .register-card .form-control:focus {
             color: var(--gb-text);
-            background: #fff;
+            background: #0d100e;
 
             border-color: var(--gb-primary);
 
             box-shadow:
-                0 0 0 3px rgba(196, 81, 112, 0.14);
+                0 0 0 3px rgba(32, 230, 138, 0.16);
         }
 
         /*
@@ -466,14 +507,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         .password-toggle:hover,
         .password-toggle:focus {
             color: var(--gb-text);
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.07);
         }
 
         /*
          * Helper text
          */
         .register-card .form-text {
-            color: #64748B;
+            color: var(--gb-muted);
             font-size: 12px;
             line-height: 1.5;
             margin-top: 7px;
@@ -489,7 +530,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
             overflow: hidden;
 
-            background: #1D2939;
+            background: #252b27;
 
             border-radius: 99px;
         }
@@ -515,7 +556,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             border-radius: 12px;
 
             background: var(--gb-primary);
-            color: #fff;
+            color: #07120c;
 
             font-size: 15px;
             font-weight: 700;
@@ -527,7 +568,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
         .register-button:hover {
             background: var(--gb-primary-hover);
-            color: #fff;
+            color: #07120c;
         }
 
         .register-button:active {
@@ -566,7 +607,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         }
 
         .login-text a:hover {
-            color: #4ADE80;
+            color: var(--gb-primary);
             text-decoration: underline;
         }
 
@@ -578,7 +619,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
             text-align: center;
 
-            color: #64748B;
+            color: var(--gb-muted);
 
             font-size: 12px;
         }
@@ -772,6 +813,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label" for="referral_code">Referral code <span class="text-secondary">Optional</span></label>
+                    <input
+                        class="form-control text-uppercase"
+                        id="referral_code"
+                        name="referral_code"
+                        value="<?= html_escape($referralCode) ?>"
+                        maxlength="24"
+                        autocomplete="off"
+                    >
+                    <div class="form-text">A team member can share a referral link or code with you.</div>
+                </div>
 
                 <!-- Password -->
 
@@ -917,7 +970,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         <!-- Footer -->
 
         <div class="register-footer">
-            © <?= date('Y') ?> Selam Dating App
+            © <?= date('Y') ?> Selam Market
         </div>
 
     </div>
@@ -1163,7 +1216,7 @@ document.addEventListener(
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="assets/js/app.js"></script>
+<script src="assets/js/app.js?v=feedback-2"></script>
 
 </body>
 

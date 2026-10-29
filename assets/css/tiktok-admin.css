@@ -26,13 +26,13 @@ body {
 .admin-nav a:hover,
 .admin-nav-link:hover,
 .admin-nav a.active {
-    border-color: rgba(254, 44, 85, .28);
-    background: rgba(254, 44, 85, .11);
+    border-color: rgba(97, 223, 173, .3);
+    background: rgba(8, 117, 82, .18);
     color: #fff;
 }
 
 .admin-nav a.active i {
-    color: #fe2c55;
+    color: #61dfad;
 }
 
 .admin-nav-link {
@@ -64,6 +64,16 @@ body {
     color: #a7a7b0 !important;
 }
 
+.admin-content .text-secondary,
+.admin-content .form-text {
+    color: #b7c1cc !important;
+}
+
+.admin-content .form-label,
+.admin-content .form-check-label {
+    color: #f5f5f7;
+}
+
 .admin-content .data-panel,
 .admin-content .metric-card {
     border: 1px solid #2a2a32;
@@ -89,11 +99,98 @@ body {
 }
 
 .admin-nav-mobile a.active {
-    color: #fe2c55;
+    color: #61dfad;
 }
 
 @media (max-width: 767.98px) {
+    body {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .admin-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 1020;
+        min-height: 56px;
+        padding: 8px 12px;
+    }
+
     .admin-nav-mobile {
-        scrollbar-width: thin;
+        position: sticky;
+        top: 56px;
+        z-index: 1010;
+        gap: 6px;
+        padding: 8px 10px;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .admin-nav-mobile::-webkit-scrollbar {
+        display: none;
+    }
+
+    .admin-nav-mobile a {
+        min-height: 40px;
+        padding: 0 12px;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        background: #15151b;
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .admin-nav-mobile a.active {
+        border-color: rgba(97, 223, 173, .3);
+        background: rgba(8, 117, 82, .18);
+    }
+
+    .admin-content {
+        width: 100%;
+        padding: 18px 12px 32px;
+    }
+
+    .admin-content .page-heading {
+        margin-bottom: 14px;
+    }
+
+    .admin-content .page-heading h1 {
+        font-size: 22px;
+    }
+
+    .admin-content .data-panel,
+    .admin-content .metric-card {
+        border-radius: 12px;
+    }
+
+    .admin-content .data-panel-header {
+        flex-wrap: wrap;
+        padding: 12px 14px;
+    }
+
+    .admin-content .form-control,
+    .admin-content .form-select,
+    .admin-content textarea {
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    .admin-content .btn,
+    .admin-content .btn-sm {
+        min-height: 40px;
+    }
+
+    .admin-content .row {
+        --bs-gutter-x: .75rem;
+        --bs-gutter-y: .75rem;
+    }
+
+    .admin-footer {
+        padding: 12px;
+    }
+
+    .admin-search-wrapper {
+        display: none;
     }
 }

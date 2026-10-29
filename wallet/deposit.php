@@ -12,6 +12,17 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+$userId = (int) $_SESSION['user_id'];
+$depositRequestsQuery = database()->prepare("
+    SELECT id, amount, currency, provider, transaction_reference, status, created_at
+    FROM deposit_requests
+    WHERE user_id = ?
+    ORDER BY id DESC
+    LIMIT 10
+");
+$depositRequestsQuery->execute([$userId]);
+$depositRequests = $depositRequestsQuery->fetchAll(PDO::FETCH_ASSOC);
+
 $appRoot = '../';
 $pageTitle = 'Deposit';
 $pageDescription = 'Submit a deposit for Selam agent verification.';
@@ -414,6 +425,26 @@ require __DIR__ . '/../includes/app_header.php';
 
 </div>
 
+<section class="data-panel mt-4">
+    <div class="data-panel-header"><h2>Recent deposit requests</h2></div>
+    <?php if ($depositRequests === []): ?>
+        <div class="p-4 muted">You do not have any deposit requests yet.</div>
+    <?php else: ?>
+        <div class="table-responsive"><table class="table align-middle mb-0">
+            <thead><tr><th>Request</th><th>Amount</th><th>Method</th><th>Status</th><th>Date</th><th>Details</th></tr></thead>
+            <tbody><?php foreach ($depositRequests as $request): ?>
+                <tr>
+                    <td>#<?= (int) $request['id'] ?></td>
+                    <td><?= number_format((float) $request['amount'], 2) ?> <?= html_escape((string) $request['currency']) ?></td>
+                    <td><?= html_escape((string) $request['provider']) ?></td>
+                    <td><?= html_escape(ucfirst((string) $request['status'])) ?></td>
+                    <td><?= html_escape((string) $request['created_at']) ?></td>
+                    <td><button class="btn btn-sm btn-outline-light" type="button" data-wallet-request-kind="deposit" data-wallet-request-id="<?= (int) $request['id'] ?>">See details</button></td>
+                </tr>
+            <?php endforeach; ?></tbody>
+        </table></div>
+    <?php endif; ?>
+</section>
 
 <style>
 
@@ -951,5 +982,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </script>
 
-
+<?php require __DIR__ . '/../includes/wallet_request_details_panel.php'; ?>
 <?php require __DIR__ . '/../includes/app_footer.php'; ?>

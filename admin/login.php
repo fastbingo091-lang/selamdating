@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#0b0b0f">
 
-    <title>Admin Login · Selam Dating App</title>
+    <title>Admin Login · Selam Market</title>
 
     <link rel="icon" type="image/svg+xml" href="../assets/images/selam-icon.svg">
 
@@ -94,9 +94,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         rel="stylesheet"
     >
 
-    <link href="../assets/css/style.css?v=selam-3" rel="stylesheet">
-    <link href="../assets/css/tiktok-app.css?v=selam-1" rel="stylesheet">
-    <link href="../assets/css/tiktok-admin.css?v=selam-1" rel="stylesheet">
+    <link href="../assets/css/style.css?v=selam-5" rel="stylesheet">
+    <link href="../assets/css/tiktok-app.css?v=market-4" rel="stylesheet">
+    <link href="../assets/css/tiktok-admin.css?v=market-2" rel="stylesheet">
 </head>
 
 <body>
@@ -198,5 +198,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </main>
 
+<script src="../assets/js/app.js?v=feedback-2"></script>
 </body>
 </html>

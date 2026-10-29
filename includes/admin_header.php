@@ -36,6 +36,18 @@ $adminNavigation = [
         'href'  => 'users.php',
     ],
 
+    'notifications' => [
+        'label' => 'Notifications',
+        'icon'  => 'bi-bell',
+        'href'  => 'notifications.php',
+    ],
+
+    'rewards' => [
+        'label' => 'Rewards',
+        'icon'  => 'bi-gift',
+        'href'  => 'rewards.php',
+    ],
+
     'wallets' => [
         'label' => 'Wallets',
         'icon'  => 'bi-wallet2',
@@ -48,10 +60,10 @@ $adminNavigation = [
         'href'  => 'products.php',
     ],
 
-    'vip-packages' => [
-        'label' => 'Memberships',
-        'icon'  => 'bi-gem',
-        'href'  => 'vip-packages.php',
+    'profit-claims' => [
+        'label' => 'Profit Claims',
+        'icon'  => 'bi-cash-stack',
+        'href'  => 'profit-claims.php',
     ],
 
     'deposits' => [
@@ -112,7 +124,7 @@ $adminNavigation = [
 
     <meta
         name="description"
-        content="Selam Dating App administration panel"
+        content="Selam Market administration panel"
     >
 
     <title>
@@ -149,15 +161,15 @@ $adminNavigation = [
 
     <link
         rel="stylesheet"
-        href="../assets/css/style.css?v=selam-3"
+        href="../assets/css/style.css?v=selam-5"
     >
     <link
         rel="stylesheet"
-        href="../assets/css/tiktok-app.css?v=selam-1"
+        href="../assets/css/tiktok-app.css?v=market-4"
     >
     <link
         rel="stylesheet"
-        href="../assets/css/tiktok-admin.css?v=selam-1"
+        href="../assets/css/tiktok-admin.css?v=market-2"
     >
 
     <script
