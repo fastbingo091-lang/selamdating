@@ -9,6 +9,36 @@ Wallets use ETB. Each member has a numeric Selam user ID; internal transfers are
 - XAMPP with Apache, MySQL/MariaDB, and PHP 8.2 or newer
 - A browser such as Chrome
 
+## Run locally with Docker
+
+Docker Desktop with Docker Compose is an alternative to the XAMPP setup below. From the repository folder, start the app and its MariaDB database:
+
+```powershell
+docker compose up --build -d
+```
+
+The app will be available at `http://localhost:8080`. The first run creates an empty database; import the schema and the application migrations before registering or using the app:
+
+```powershell
+function Import-DockerSql($path) {
+    Get-Content -Raw -Encoding UTF8 $path |
+        docker compose exec -T db sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" goferbet'
+}
+
+Import-DockerSql database/schema.sql
+@(
+    "database/migrations/20260925_phone_telegram.sql",
+    "database/migrations/20261025_social_wallet_agents.sql",
+    "database/migrations/20261029_product_marketplace.sql",
+    "database/migrations/20261030_marketplace_referrals_and_duration.sql",
+    "database/migrations/20261031_notifications.sql",
+    "database/migrations/20261032_marketplace_rewards.sql",
+    "database/migrations/20261033_marketplace_partners.sql"
+) | ForEach-Object { Import-DockerSql $_ }
+```
+
+Then visit `http://localhost:8080/healthz.php`; a successful database connection returns `ok`. The default database passwords in Compose are for local development only. Set `DB_PASS` and `DB_ROOT_PASSWORD` in your shell before starting the containers if you want different local credentials. Database and uploaded images persist in Docker volumes. To stop the containers without deleting data, run `docker compose down`; `docker compose down -v` also deletes the database and uploaded images.
+
 ## Phase 1 setup
 
 1. Install XAMPP, then open the XAMPP Control Panel and start **Apache** and **MySQL**.
@@ -26,12 +56,12 @@ Create/import the `goferbet` database before registering or using the applicatio
 
 The repository includes a Render Blueprint (`render.yaml`) and a Docker image for PHP 8.2 with Apache, `pdo_mysql`, `mysqli`, `mbstring`, and cURL. Render does not provide a managed MySQL database for this app; provision a separate MySQL/MariaDB-compatible database first. Do not select Render Postgres: the application schema and queries require MySQL/MariaDB.
 
-1. Back up the local database before moving any existing users, wallets, purchases, coupons, or admin accounts. Provision a production MySQL/MariaDB database that permits connections from Render and supports InnoDB, `utf8mb4`, and the schema's foreign keys and checks.
-2. In Render, create a **Blueprint** from this Git repository and review `render.yaml`. The web service uses Render's paid `0.5c-512mb` plan because product image uploads require a persistent disk. Keep one web instance: the image disk is attached to one instance and is not shared across scaled replicas.
-3. Set `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASS` in the Render service environment from the database provider's connection details. Keep credentials out of Git. If the provider requires a CA certificate, add it as a Render Secret File and set `DB_SSL_CA` to that file's path. `APP_ENV=production` is already set by the Blueprint.
-4. Create the database using the provider's console. Import `database/schema.sql` into it, omitting the initial `CREATE DATABASE` and `USE goferbet` statements if the provider has already created a database with a different name. Then apply these migrations once, in order: `database/migrations/20260925_phone_telegram.sql`, `database/migrations/20261025_social_wallet_agents.sql`, `database/migrations/20261029_product_marketplace.sql`, `database/migrations/20261030_marketplace_referrals_and_duration.sql`, `database/migrations/20261031_notifications.sql`, `database/migrations/20261032_marketplace_rewards.sql`, and `database/migrations/20261033_marketplace_partners.sql`. Do not reapply migrations to a database that already contains them.
-5. For a fresh database, open the Render Shell after the service deploys and create the first administrator with `php docker/create_admin.php <username>`. Enter a strong password at the hidden prompt. Existing imported admin accounts can continue to sign in at `/admin/login.php`.
-6. Confirm the Render health check at `/healthz.php` is green, then test registration, login, product image upload, purchase, and admin access before directing users to the site.
+1. Back up the local database before moving any existing users, wallets, purchases, coupons, or admin accounts. Provision a production MySQL/MariaDB database that permits connections from Render and supports InnoDB, `utf8mb4`, and the schema's foreign keys and checks. Do not use Render Postgres.
+2. Create the database using the provider's console. Import `database/schema.sql`, omitting its initial `CREATE DATABASE` and `USE goferbet` statements if the provider created the database under a different name. Then apply these migrations once, in order: `database/migrations/20260925_phone_telegram.sql`, `database/migrations/20261025_social_wallet_agents.sql`, `database/migrations/20261029_product_marketplace.sql`, `database/migrations/20261030_marketplace_referrals_and_duration.sql`, `database/migrations/20261031_notifications.sql`, `database/migrations/20261032_marketplace_rewards.sql`, and `database/migrations/20261033_marketplace_partners.sql`. Do not reapply migrations to a database that already contains them.
+3. In Render, create a **Blueprint** from this Git repository and review `render.yaml`. During Blueprint setup, provide `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASS` from the database provider; keep credentials out of Git. `DB_PORT` defaults to `3306`, and `APP_ENV=production` is already configured. If the provider requires a CA certificate, add it as a Render Secret File and set `DB_SSL_CA` to that file's path. The web service uses Render's paid `0.5c-512mb` plan because product image uploads require a persistent disk.
+4. Keep one web instance: the image disk is attached to one instance and is not shared across scaled replicas. Wait for the deployment and `/healthz.php` check to succeed.
+5. For a fresh database, open the Render Shell and create the first administrator with `php docker/create_admin.php <username>`. Enter a strong password at the hidden prompt. Existing imported admin accounts can sign in at `/admin/login.php`.
+6. Test registration, login, product image upload, purchase, and admin access before directing users to the site.
 
 The Render disk stores files under `assets/uploads`, including product images, across deploys and restarts. It does not import images from the local machine; re-upload those images through Admin → Products after deployment, or copy them to the mounted disk before launch. The database is separate and must be backed up with the database provider. Render's service filesystem outside that disk is ephemeral.
 
